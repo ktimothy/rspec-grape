@@ -2,7 +2,7 @@
 
 This gem is a set of spec helpers, that will help to test [Grape](https://github.com/ruby-grape/grape) APIs easily. The usual approach to test apis, as [official documentation shows](https://github.com/ruby-grape/grape#rspec), is:
 
-```
+```ruby
 context 'GET /api/v1/test' do
   it 'returns 200' do
     get '/api/v1/test'
@@ -43,7 +43,7 @@ Gem's behaviour is based on some conventions:
 
 This gem provides the `call_api` helper method. It automatically reads endpoint url and method from context description, allowing you to avoid duplication and write a shorter spec:
 
-```
+```ruby
 context 'GET /api/v1/test' do
   it 'returns 200' do
     expect(call_api.status).to eq(200)
@@ -55,13 +55,13 @@ end
 
 Params can be either passed to `call_api` method:
 
-```
+```ruby
 call_api({foo: :bar})
 ```
 
 or set via `let`:
 
-```
+```ruby
 let(:api_params) { { foo: :bar } }
 ```
 
@@ -74,9 +74,11 @@ It is also possible to use two methods in your specs: `api_url` and `api_method`
 
 You can always use them, as `call_api` methods does:
 
-```
+```ruby
 send(api_method, api_url)
 ```
+
+Note that you do not need to `include Rack::Test::Methods` as they are already included by gem.
 
 ## TODO
 
