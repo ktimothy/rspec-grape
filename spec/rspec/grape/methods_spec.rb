@@ -58,4 +58,20 @@ describe RSpec::Grape::Methods, include_methods: true do
       end
     end
   end
+
+  describe '#expect_endpoint_to' do
+    it 'calls Grape::Endoint.before_each' do
+      expect(Grape::Endpoint).to receive(:before_each)
+
+      expect_endpoint_to be_nil
+    end
+  end
+
+  describe '#expect_endpoint_not_to' do
+    it 'calls Grape::Endoint.before_each' do
+      expect(Grape::Endpoint).to receive(:before_each)
+
+      expect_endpoint_not_to be_nil
+    end
+  end
 end

@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'rspec-grape'
+require 'grape'
 
 module SpecHelpers
   def is_expected_to_raise(*args)

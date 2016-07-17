@@ -39,6 +39,15 @@ Gem's behaviour is based on some conventions:
 * examples should be grouped by endpoints
 * group of endpoint specs shoud be described as 'HTTP_METHOD /api/path'
 
+In order to have helpers available in examples, you need to add `type: :api` metadata:
+```ruby
+describe MyAPI, type: :api do
+```
+Or use a symbol:
+```ruby
+describe MyAPI, :api do
+```
+
 ### Basic usage
 
 This gem provides the `call_api` helper method. It automatically reads endpoint url and method from context description, allowing you to avoid duplication and write a shorter spec:
@@ -67,6 +76,16 @@ let(:api_params) { { foo: :bar } }
 
 Note, that params, explicitly passed to `call_api`, have precendence over thoose set in `api_params`.
 
+### Stubbing API helpers
+
+rspec-grape provides two methods to stub API helpers: `expect_endpoint_to` and `expect_endpoint_not_to`. You can easily write:
+
+```ruby
+expect_endpoint_to receive(:help_me)
+expect_endpoint_not_to receive(:dont_help)
+```
+
+Note that under the hood those methods use `Grape::Endpoint.before_each`, as suggested by [documentation](https://github.com/ruby-grape/grape#stubbing-helpers). Thanks to [Jon Rowe](https://github.com/JonRowe) for the idea.
 
 ### Additional spec helpers
 
@@ -83,7 +102,6 @@ Note that you do not need to `include Rack::Test::Methods` as they are already i
 ## TODO
 
 * Support urls with params: `/api/test/:id`
-* Provide `api_helpers` for easier helpers stubbing [see](https://github.com/ruby-grape/grape#stubbing-helpers)
 
 ## Development
 

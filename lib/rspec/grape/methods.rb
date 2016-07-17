@@ -21,6 +21,15 @@ module RSpec
         self.send(api_method, api_url, params)
       end
 
+      def expect_endpoint_to(matcher)
+        ::Grape::Endpoint.before_each { |endpoint| expect(endpoint).to matcher }
+      end
+
+      def expect_endpoint_not_to(matcher)
+        ::Grape::Endpoint.before_each { |endpoint| expect(endpoint).not_to matcher }
+      end
+
+
       private
 
       def api_endpoint_description

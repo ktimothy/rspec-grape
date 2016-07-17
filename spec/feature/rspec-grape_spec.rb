@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/test_api'
 
-describe TestAPI, type: :api do
+describe TestAPI, :api do
   describe 'GET /test_api_was_called' do
     it 'calls api' do
       call_api
@@ -36,6 +36,26 @@ describe TestAPI, type: :api do
       expect {
         call_api
       }.to raise_exception(RSpec::Grape::NoEndpointDescription)
+    end
+  end
+
+  describe 'GET /test_helper_invocation' do
+    describe '#expect_endpoint_to' do
+      it 'calls helper method' do
+        result = { helper_stubbed: true }
+        expect_endpoint_to receive(:help_me).and_return(result)
+
+        call_api
+        expect(last_response.body).to eq(result.to_json)
+      end
+    end
+
+    describe '#expect_endpoint_not_to' do
+      it 'does not call helper method' do
+        expect_endpoint_not_to receive(:dont_help_me)
+
+        call_api
+      end
     end
   end
 end
