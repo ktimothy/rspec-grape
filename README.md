@@ -1,4 +1,4 @@
-# Rspec::Grape
+# Rspec::Grape [![Build Status](https://travis-ci.org/ktimothy/rspec-grape.svg?branch=master)](https://travis-ci.org/ktimothy/rspec-grape) [![GitHub version](https://badge.fury.io/gh/ktimothy%2Frspec-grape.svg)](https://badge.fury.io/gh/ktimothy%2Frspec-grape)
 
 This gem is a set of spec helpers, that will help to test [Grape](https://github.com/ruby-grape/grape) APIs easily. The usual approach to test apis, as [official documentation shows](https://github.com/ruby-grape/grape#rspec), is:
 
