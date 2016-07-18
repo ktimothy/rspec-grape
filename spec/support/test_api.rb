@@ -32,4 +32,8 @@ class TestAPI < Grape::API
   get :test_helper_invocation do
     help_me
   end
+
+  get '/params/:param/:id' do    
+    params
+  end
 end

@@ -58,4 +58,23 @@ describe TestAPI, :api do
       end
     end
   end
+
+  describe 'GET /params/:param/:id' do
+    context 'when parameter is not set' do
+      it 'raises exception' do
+        expect {
+          call_api
+          }.to raise_exception(RSpec::Grape::UrlParameterNotSet)
+      end
+    end
+
+    context 'when parameter values set' do
+      it 'assigns all values' do
+        params = { param: 'defined', id: '129' }
+        call_api(params)
+        
+        expect(last_response.body).to eq(params.to_json)
+      end
+    end
+  end
 end

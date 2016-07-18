@@ -55,4 +55,26 @@ describe RSpec::Grape::Utils do
       end
     end
   end
+
+  describe '.url_param_names' do
+    context 'when url is not parameterized' do
+      subject { described_class.url_param_names('/not/parameterized/url') }
+
+      it { is_expected.to eq([]) }
+    end
+
+    context 'when url is parameterized' do
+      context 'with one parameter' do
+        subject { described_class.url_param_names('/url/with/:param') }
+
+        it { is_expected.to eq([:param]) }
+      end
+
+      context 'with many parameters' do
+        subject { described_class.url_param_names('/url/with/:many/:param/:id/') }
+
+        it { is_expected.to eq([:many, :param, :id]) }
+      end
+    end
+  end
 end

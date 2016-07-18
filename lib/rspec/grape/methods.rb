@@ -14,12 +14,33 @@ module RSpec
       def api_url
         @api_url ||= api_endpoint_description.split(' ').last
       end
+
+      def parameterized_api_url(params = nil)
+        raise RSpec::Grape::UrlIsNotParameterized unless parameterized_url?
+
+        params ||= resolve_params(params)
+
+        url = api_url.dup
+        names = RSpec::Grape::Utils.url_param_names(api_url)
+        names.each do |name|
+          raise RSpec::Grape::UrlParameterNotSet unless params.has_key?(name.to_sym)
+
+          url[":#{name}"] = params[name].to_s
+        end
+
+        url
       end
 
       def call_api(params = nil)
-        params ||= self.respond_to?(:api_params) ? api_params : {}
+        params ||= resolve_params(params)
 
-        self.send(api_method, api_url, params)
+        if parameterized_url?
+          url = parameterized_api_url(params)
+        else
+          url = api_url
+        end
+
+        self.send(api_method, url, params)
       end
 
       def expect_endpoint_to(matcher)
@@ -35,6 +56,14 @@ module RSpec
 
       def api_endpoint_description
         @api_endpoint_description ||= RSpec::Grape::Utils.find_endpoint_description(self.class)
+      end
+
+      def parameterized_url?
+        api_url =~ /\/:/
+      end
+
+      def resolve_params(params = nil)
+        params || self.respond_to?(:api_params) ? api_params : {}
       end
     end
   end

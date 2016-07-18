@@ -87,6 +87,20 @@ expect_endpoint_not_to receive(:dont_help)
 
 Note that under the hood those methods use `Grape::Endpoint.before_each`, as suggested by [documentation](https://github.com/ruby-grape/grape#stubbing-helpers). Thanks to [Jon Rowe](https://github.com/JonRowe) for the idea.
 
+### Inline parameters
+
+When you define some parameters in url like
+```ruby
+get '/url/with/:param'
+```
+you can use `parameterized_api_url` helper. You can set parameter values via `:api_params` or expliciltly pass them to helper. The result will be url with parameter names substituted with actual values:
+```ruby
+parameterized_api_url(param: 'defined') # '/url/with/defined'
+```
+
+If some parameters are not set, method will raise `RSpec::Grape::UrlNotSetException`.
+Note that `call_api` helper will use parameterized_url to generate url to be called.
+
 ### Additional spec helpers
 
 It is also possible to use two methods in your specs: `api_url` and `api_method`. The former returns url from spec description, while the latter returns http method.
@@ -99,9 +113,6 @@ send(api_method, api_url)
 
 Note that you do not need to `include Rack::Test::Methods` as they are already included by gem.
 
-## TODO
-
-* Support urls with params: `/api/test/:id`
 
 ## Development
 

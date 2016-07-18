@@ -47,6 +47,30 @@ describe RSpec::Grape::Methods, include_methods: true do
           call_api(params)
         end
       end
+
+      context 'with parameterized url' do
+        it 'uses parameterized_url' do
+          allow(self).to receive(:api_url).and_return('/url/with/:param')
+          allow(self).to receive(:api_method).and_return(:get)
+
+          expect(self).to receive(:parameterized_api_url).and_call_original
+          expect(self).to receive(:send).with(anything, '/url/with/defined_value', anything)
+          
+          call_api(param: 'defined_value')
+        end
+      end
+
+      context 'with not parameterized url' do
+        it 'uses api_url url' do
+          allow(self).to receive(:api_url).and_return('/simple/url')
+          allow(self).to receive(:api_method).and_return(:get)
+
+          expect(self).not_to receive(:parameterized_api_url)
+          expect(self).to receive(:send).with(anything, '/simple/url', anything)
+          
+          call_api
+        end
+      end
     end
 
     context 'when params are explicitly passed to api_call' do
@@ -72,6 +96,34 @@ describe RSpec::Grape::Methods, include_methods: true do
       expect(Grape::Endpoint).to receive(:before_each)
 
       expect_endpoint_not_to be_nil
+    end
+  end
+
+  describe '#parameterized_api_url' do
+    context 'when url is not parameterized' do
+      before { allow(self).to receive(:api_url).and_return('/not/parameterized') }
+      subject { parameterized_api_url }
+
+      it 'raises exception' do
+        expect { subject }.to raise_exception(RSpec::Grape::UrlIsNotParameterized)
+      end
+    end
+
+    context 'when url is parameterized' do
+      before { allow(self).to receive(:api_url).and_return('/url/with/:param') }
+      subject { parameterized_api_url }
+
+      context 'when parameter is not set' do
+        it 'raises exception' do
+          expect { subject }.to raise_exception(RSpec::Grape::UrlParameterNotSet)
+        end
+      end
+
+      context 'when parameter is defined' do
+        let(:api_params) { { param: 'defined_value' } }
+
+        it { is_expected.to eq("/url/with/#{api_params[:param]}") }
+      end
     end
   end
 end
