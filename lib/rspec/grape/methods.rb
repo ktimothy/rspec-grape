@@ -8,11 +8,12 @@ module RSpec
       end
 
       def api_method
-        api_endpoint_description.split(' ').first.downcase.to_sym
+        @api_method ||= api_endpoint_description.split(' ').first.downcase.to_sym
       end
 
       def api_url
-        api_endpoint_description.split(' ').last
+        @api_url ||= api_endpoint_description.split(' ').last
+      end
       end
 
       def call_api(params = nil)
