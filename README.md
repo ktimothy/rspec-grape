@@ -62,19 +62,11 @@ end
 
 ### Passing request params
 
-Params can be either passed to `call_api` method:
+Params can be passed to `call_api` method:
 
 ```ruby
 call_api({foo: :bar})
 ```
-
-or set via `let`:
-
-```ruby
-let(:api_params) { { foo: :bar } }
-```
-
-Note, that params, explicitly passed to `call_api`, have precendence over thoose set in `api_params`.
 
 ### Stubbing API helpers
 
@@ -93,7 +85,7 @@ When you define some parameters in url like
 ```ruby
 get '/url/with/:param'
 ```
-you can use `parameterized_api_url` helper. You can set parameter values via `:api_params` or expliciltly pass them to helper. The result will be url with parameter names substituted with actual values:
+you can use `parameterized_api_url` helper to generate full url. Pass parameters as hash. The result will be url with parameter names substituted with actual values:
 ```ruby
 parameterized_api_url(param: 'defined') # '/url/with/defined'
 ```

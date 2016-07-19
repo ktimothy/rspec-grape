@@ -21,16 +21,6 @@ describe TestAPI, :api do
     end
   end
 
-  describe 'GET /test_api_params' do
-    let(:api_params) { params }
-
-    it 'uses api_params' do
-      call_api
-
-      expect(last_response.body).to eq(result)
-    end
-  end
-
   context 'when no valid endpoint description' do
     it 'raises exception' do
       expect {

@@ -31,50 +31,32 @@ describe RSpec::Grape::Methods, include_methods: true do
       expect(call_api).to eq(:result)
     end
 
-    context 'when api_params is defined' do
-      let(:api_params) { { foo: :bar } }
+    context 'when url has inline params' do
+      it 'uses parameterized_url' do
+        allow(self).to receive(:api_url).and_return('/url/with/:param')
+        allow(self).to receive(:api_method).and_return(:get)
 
-      it 'uses api_params' do
-        expect(self).to receive(:send).with(api_method, api_url, api_params)        
+        expect(self).to receive(:parameterized_api_url).and_call_original
+        expect(self).to receive(:send).with(anything, '/url/with/defined_value', anything)
+        
+        call_api(param: 'defined_value')
+      end
+    end
+
+    context 'when there are no inline parameters' do
+      it 'uses api_url' do
+        allow(self).to receive(:api_url).and_return('/simple/url')
+        allow(self).to receive(:api_method).and_return(:get)
+
+        expect(self).not_to receive(:parameterized_api_url)
+        expect(self).to receive(:send).with(anything, '/simple/url', anything)
+        
         call_api
-      end
-
-      context 'when params are explicitly passed to call_api' do
-        it 'uses api_params instead' do
-          params = { override: true }
-          expect(self).to receive(:send).with(api_method, api_url, params)
-          
-          call_api(params)
-        end
-      end
-
-      context 'with parameterized url' do
-        it 'uses parameterized_url' do
-          allow(self).to receive(:api_url).and_return('/url/with/:param')
-          allow(self).to receive(:api_method).and_return(:get)
-
-          expect(self).to receive(:parameterized_api_url).and_call_original
-          expect(self).to receive(:send).with(anything, '/url/with/defined_value', anything)
-          
-          call_api(param: 'defined_value')
-        end
-      end
-
-      context 'with not parameterized url' do
-        it 'uses api_url url' do
-          allow(self).to receive(:api_url).and_return('/simple/url')
-          allow(self).to receive(:api_method).and_return(:get)
-
-          expect(self).not_to receive(:parameterized_api_url)
-          expect(self).to receive(:send).with(anything, '/simple/url', anything)
-          
-          call_api
-        end
       end
     end
 
     context 'when params are explicitly passed to api_call' do
-      it 'uses passed params' do
+      it 'uses passed params in request' do
         params = { test: true }
         expect(self).to receive(:send).with(api_method, api_url, params)
         
@@ -120,9 +102,9 @@ describe RSpec::Grape::Methods, include_methods: true do
       end
 
       context 'when parameter is defined' do
-        let(:api_params) { { param: 'defined_value' } }
+        subject { parameterized_api_url(param: 'defined_value') }
 
-        it { is_expected.to eq("/url/with/#{api_params[:param]}") }
+        it { is_expected.to eq("/url/with/defined_value") }
       end
     end
   end

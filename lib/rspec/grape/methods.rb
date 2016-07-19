@@ -18,7 +18,7 @@ module RSpec
       def parameterized_api_url(params = nil)
         raise RSpec::Grape::UrlIsNotParameterized unless parameterized_url?
 
-        params ||= resolve_params(params)
+        params ||= {}
 
         url = api_url.dup
         names = RSpec::Grape::Utils.url_param_names(api_url)
@@ -32,7 +32,7 @@ module RSpec
       end
 
       def call_api(params = nil)
-        params ||= resolve_params(params)
+        params ||= {}
 
         if parameterized_url?
           url = parameterized_api_url(params)
@@ -60,10 +60,6 @@ module RSpec
 
       def parameterized_url?
         api_url =~ /\/:/
-      end
-
-      def resolve_params(params = nil)
-        params || self.respond_to?(:api_params) ? api_params : {}
       end
     end
   end
