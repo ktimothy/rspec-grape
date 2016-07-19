@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 API_DESC = 'POST /api/v1/test'
-ANOTHER_API_DESC = 'GET /api/v2/test'
+ANOTHER_API_DESC = 'GET /mostly/nested/test'
 
 describe RSpec::Grape::Utils do
   describe '.find_endpoint_description' do
@@ -17,7 +17,7 @@ describe RSpec::Grape::Utils do
 
         context 'with nested api description' do
           describe ANOTHER_API_DESC do
-            it { is_expected.to eq(API_DESC) }
+            it { is_expected.to eq(ANOTHER_API_DESC) }
           end
         end
 

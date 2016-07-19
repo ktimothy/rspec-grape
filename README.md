@@ -93,6 +93,23 @@ parameterized_api_url(param: 'defined') # '/url/with/defined'
 If some parameters are not set, method will raise `RSpec::Grape::UrlNotSetException`.
 Note that `call_api` helper will use parameterized_url to generate url to be called.
 
+### Nested descriptions
+
+You may need to define nested descriptions of endpoint when you are using inline url parameters:
+```ruby
+describe 'GET /inline/:param' do
+  describe 'GET /inline/false' do
+    ...
+  end
+
+  describe 'GET /inline/true' do
+    ...
+  end
+end
+```
+
+In this case `api_url` will point to inner description, `/inline/false` and `/inline/true` consequently. If you set all inline parameters in description, there is no need to pass parameters to `call_api`.
+
 ### Additional spec helpers
 
 It is also possible to use two methods in your specs: `api_url` and `api_method`. The former returns url from spec description, while the latter returns http method.

@@ -17,7 +17,7 @@ module RSpec
 
         raise RSpec::Grape::NoEndpointDescription unless ancestors.any?
 
-        ancestors.last.description
+        ancestors.first.description
       end
 
       def self.url_param_names(url)
